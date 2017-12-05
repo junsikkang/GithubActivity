@@ -34,6 +34,10 @@ public class GithubQuerier {
             Date date = inFormat.parse(creationDate);
             String formatted = outFormat.format(date);
 
+            // Get commits info
+            JSONObject payload = event.getJSONObject("payload");
+            JSONArray commits = payload.getJSONArray("commits");
+
             // Add type of event as header
             sb.append("<h3 class=\"type\">");
             sb.append(type);
@@ -42,6 +46,23 @@ public class GithubQuerier {
             sb.append(" on ");
             sb.append(formatted);
             sb.append("<br />");
+            // Add table with commits
+            sb.append("<style>");
+            sb.append("table, th, td, tr { border-collapse: collapse; border: 1px solid black; }");
+            sb.append("</style>");
+            sb.append("<table style=\"width:80%\">");
+            sb.append("<tr>");
+            sb.append("<th style=\"width:40%\">Commit SHA</th>");
+            sb.append("<th style=\"width:40%\">Commit message</th>");
+            sb.append("</tr>");
+            for(int j = 0; j < commits.length(); j++) {
+                JSONObject commit = commits.getJSONObject(j);
+                sb.append("<tr>");
+                sb.append("<td>" + commit.getString("sha") + "</td>");
+                sb.append("<td>" + commit.getString("message") + "</td>");
+                sb.append("</tr>");
+            }
+            sb.append("</table>");
             // Add collapsible JSON textbox (don't worry about this for the homework; it's just a nice CSS thing I like)
             sb.append("<a data-toggle=\"collapse\" href=\"#event-" + i + "\">JSON</a>");
             sb.append("<div id=event-" + i + " class=\"collapse\" style=\"height: auto;\"> <pre>");
@@ -59,8 +80,14 @@ public class GithubQuerier {
         JSONObject json = Util.queryAPI(new URL(url));
         System.out.println(json);
         JSONArray events = json.getJSONArray("root");
-        for (int i = 0; i < events.length() && i < 10; i++) {
-            eventList.add(events.getJSONObject(i));
+        int j = 0;
+        for (int i = 0; i < events.length() && j < 10; i++) {
+            JSONObject object = events.getJSONObject(i);
+            String type = object.getString("type");
+            if(type.equals("PushEvent")){
+                eventList.add(object);
+                j++;
+            }
         }
         return eventList;
     }
