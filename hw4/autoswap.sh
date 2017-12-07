@@ -1,21 +1,7 @@
-# run new/old version container
-#if activity ... if activity2 ...
-
-#function runcontainer {
-#    docker ps -a > /tmp/yy_xx$$
-#    if ... web1 exists
-#    
-#    then web2
-#    and connect to network
-#    
-#    else if web2 exists
-#    
-#    then run web1
-#    and connect to network
-#}
-
 docker ps -a > /tmp/yy_xx$$
 
+# if there's a container web1 then run web2 and kill web1
+# else run web1 and kill web2
 if grep --quiet web1 /tmp/yy_xx$$
   then
   echo "Running container web2"
@@ -39,18 +25,3 @@ elif grep --quiet web2 /tmp/yy_xx$$
 fi
 
 echo "Swap completed"
-#runcontainer $1
-#docker run -d -P --name web1 $1
-#docker run -d -P --name web1 activity
-#docker run -d -P --name web2 activity2
-
-#docker network connect ecs189_default web1
-#docker network connect ecs189_default web2
-
-#docker exec ecs189_proxy_1 /bin/bash /bin/swap1.sh
-#docker exec ecs189_proxy_1 /bin/bash /bin/swap2.sh
-
-#killitif web1
-#killitif web2
-
-#echo "Swap completed"

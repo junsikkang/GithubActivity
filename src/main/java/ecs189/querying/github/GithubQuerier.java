@@ -48,17 +48,17 @@ public class GithubQuerier {
             sb.append("<br />");
             // Add table with commits
             sb.append("<style>");
-            sb.append("table, th, td, tr { border-collapse: collapse; border: 1px solid black; }");
+            sb.append("table, th, td, tr { border-collapse: collapse; border: 1px solid black }");
             sb.append("</style>");
-            sb.append("<table style=\"width:80%\">");
+            sb.append("<table style=\"width:55%\">");
             sb.append("<tr>");
-            sb.append("<th style=\"width:40%\">Commit SHA</th>");
+            sb.append("<th style=\"width:15%\">Commit SHA</th>");
             sb.append("<th style=\"width:40%\">Commit message</th>");
             sb.append("</tr>");
             for(int j = 0; j < commits.length(); j++) {
                 JSONObject commit = commits.getJSONObject(j);
                 sb.append("<tr>");
-                sb.append("<td>" + commit.getString("sha") + "</td>");
+                sb.append("<td>" + commit.getString("sha").substring(0, 8) + "</td>");
                 sb.append("<td>" + commit.getString("message") + "</td>");
                 sb.append("</tr>");
             }
